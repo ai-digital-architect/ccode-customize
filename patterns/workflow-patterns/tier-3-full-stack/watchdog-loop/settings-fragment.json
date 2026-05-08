@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm build:*)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm audit:*)",
+      "Bash(du -sh dist/*)",
+      "Bash(sleep *)",
+      "Bash(mkdir -p .claude/watchdog)"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/watchdog-notify.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm build:*)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(rm -rf .claude/fan-out-results/*.json)",
+      "Bash(cat .claude/fan-out-results/*)",
+      "Bash(ls .claude/fan-out-results/)",
+      "Bash(mkdir -p .claude/fan-out-results)"
+    ],
+    "deny": [
+      "Bash(rm -rf /:*)",
+      "Bash(git push --force:*)"
+    ]
+  },
+  "hooks": {
+    "SubagentStop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/track-worker-completion.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

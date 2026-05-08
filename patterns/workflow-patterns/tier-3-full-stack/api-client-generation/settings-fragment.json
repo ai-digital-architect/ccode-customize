@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm typecheck)",
+      "Bash(mypy *)",
+      "Bash(go vet *)",
+      "Bash(mkdir -p src/clients)",
+      "Bash(mkdir -p clients)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/typecheck-generated.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

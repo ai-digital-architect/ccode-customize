@@ -1,0 +1,271 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git show:*)",
+      "Bash(git status:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git tag:*)",
+      "Bash(git branch:*)",
+      "Bash(git checkout -b *)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm build:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm typecheck:*)",
+      "Bash(pnpm typecheck)",
+      "Bash(npm test:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run lint:*)",
+      "Bash(pytest:*)",
+      "Bash(ruff:*)",
+      "Bash(mypy:*)",
+      "Bash(go test:*)",
+      "Bash(go vet:*)",
+      "Bash(grep:*)",
+      "Bash(grep -rn *)",
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(wc:*)",
+      "Bash(wc -l .claude/map-reduce/*)",
+      "Bash(sort:*)",
+      "Bash(mkdir -p *)",
+      "Bash(cat .claude/review-score.json)",
+      "Bash(jq * .claude/review-score.json)",
+      "Bash(pnpm db:generate:*)",
+      "Bash(pnpm db:migrate:*)",
+      "Bash(pnpm db:*)",
+      "Bash(pnpm audit:*)",
+      "Bash(pnpm test --reporter=json)",
+      "Bash(prettier *)",
+      "Bash(du -sh dist/*)",
+      "Bash(sleep *)",
+      "Bash(ls packages/)",
+      "Bash(ls .env*)",
+      "Bash(ls .claude/fan-out-results/)",
+      "Bash(ls .claude/map-reduce/*)",
+      "Bash(ls migrations/)",
+      "Bash(rm -rf .claude/fan-out-results/*.json)",
+      "Bash(rm -rf .claude/map-reduce/results/*)",
+      "Bash(cat .claude/fan-out-results/*)",
+      "Bash(cat .claude/approval/*)",
+      "Bash(cat .claude/rollout/*)",
+      "Bash(cat .claude/migration/*)",
+      "Bash(cat .claude/map-reduce/*)",
+      "Bash(cat .env*)",
+      "Bash(cat migrations/*)",
+      "Bash(mkdir -p .claude/fan-out-results)",
+      "Bash(mkdir -p .claude/approval)",
+      "Bash(mkdir -p .claude/rollout)",
+      "Bash(mkdir -p .claude/migration/modules)",
+      "Bash(mkdir -p .claude/refactor)",
+      "Bash(mkdir -p .claude/schema)",
+      "Bash(mkdir -p .claude/regression)",
+      "Bash(mkdir -p .claude/watchdog)",
+      "Bash(mkdir -p .claude/env)",
+      "Bash(mkdir -p .claude/secrets)",
+      "Bash(mkdir -p .claude/map-reduce/results)",
+      "Bash(mkdir -p src/clients)",
+      "Bash(mkdir -p clients)",
+      "Bash(touch .claude/approval/approved)",
+      "Bash(touch .claude/rollout/production-approved)",
+      "Bash(rm .claude/approval/approved)",
+      "Bash(find * -type d -name src)"
+    ],
+    "deny": [
+      "Bash(rm -rf /:*)",
+      "Bash(rm -rf *)",
+      "Bash(sudo:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(chmod 777:*)",
+      "Bash(curl * | bash:*)",
+      "Bash(wget * | bash:*)",
+      "Bash(psql * DROP DATABASE:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/pre-bash-safety.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/require-approval.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/rollout-gate.sh"
+          }
+        ]
+      },
+     /* {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/cost-gate.sh"
+          }
+        ]
+      }, */
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/require-reversible-migration.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/capture-baseline.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/block-promotion-on-drift.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/require-health-before-revoke.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/post-write-backpressure.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/pipeline-gate.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/migration-gate.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/refactor-lint.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/typecheck-generated.sh"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/check-review-score.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/track-worker-completion.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/mr-track-completion.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/stop-loop.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/notify-pipeline-complete.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/watchdog-notify.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

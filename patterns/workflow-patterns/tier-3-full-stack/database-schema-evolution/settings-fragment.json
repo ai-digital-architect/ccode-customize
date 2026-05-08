@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm db:*)",
+      "Bash(pnpm build:*)",
+      "Bash(cat migrations/*)",
+      "Bash(ls migrations/)",
+      "Bash(mkdir -p .claude/schema)"
+    ],
+    "deny": [
+      "Bash(psql * DROP DATABASE:*)",
+      "Bash(rm -rf /:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/require-reversible-migration.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

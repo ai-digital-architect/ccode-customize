@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm test:*)",
+      "Bash(cat .claude/rollout/*)",
+      "Bash(mkdir -p .claude/rollout)",
+      "Bash(touch .claude/rollout/production-approved)"
+    ],
+    "deny": [
+      "Bash(rm -rf /:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/rollout-gate.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

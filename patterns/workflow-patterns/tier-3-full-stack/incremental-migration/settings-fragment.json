@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm build:*)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(find * -type d -name src)",
+      "Bash(ls packages/)",
+      "Bash(cat .claude/migration/*)",
+      "Bash(mkdir -p .claude/migration/modules)"
+    ],
+    "deny": [
+      "Bash(rm -rf /:*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/migration-gate.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

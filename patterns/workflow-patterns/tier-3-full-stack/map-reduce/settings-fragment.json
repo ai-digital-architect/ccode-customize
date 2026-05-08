@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm build:*)",
+      "Bash(pnpm test:*)",
+      "Bash(find *)",
+      "Bash(ls .claude/map-reduce/*)",
+      "Bash(cat .claude/map-reduce/*)",
+      "Bash(rm -rf .claude/map-reduce/results/*)",
+      "Bash(mkdir -p .claude/map-reduce/results)",
+      "Bash(wc -l .claude/map-reduce/*)"
+    ]
+  },
+  "hooks": {
+    "SubagentStop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/mr-track-completion.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

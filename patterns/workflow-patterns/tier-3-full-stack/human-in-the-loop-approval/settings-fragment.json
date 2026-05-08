@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm build:*)",
+      "Bash(pnpm test:*)",
+      "Bash(git diff:*)",
+      "Bash(git status:*)",
+      "Bash(touch .claude/approval/approved)",
+      "Bash(rm .claude/approval/approved)",
+      "Bash(cat .claude/approval/*)",
+      "Bash(mkdir -p .claude/approval)"
+    ],
+    "deny": [
+      "Bash(rm -rf /:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/require-approval.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

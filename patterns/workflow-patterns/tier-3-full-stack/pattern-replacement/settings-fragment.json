@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm build:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(prettier *)",
+      "Bash(grep -rn *)",
+      "Bash(find *)",
+      "Bash(mkdir -p .claude/refactor)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/refactor-lint.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

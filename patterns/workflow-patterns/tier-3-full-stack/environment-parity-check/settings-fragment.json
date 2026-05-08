@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat .env*)",
+      "Bash(ls .env*)",
+      "Bash(mkdir -p .claude/env)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/block-promotion-on-drift.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
